@@ -2,8 +2,24 @@
   <div class="container">
     <div class="left">
       <div class="title">Đăng nhập</div>
-      <FSTextBox :config="{
-      }" />
+      <FSTextBox 
+        :is-focused="true"
+        :config="{
+          mode:'email'
+        }" 
+      />
+
+      <FSTextBox 
+        :config="{
+          mode:'password'
+        }" 
+      />
+
+      <div>hoặc</div>
+      <div class="button-social-group">
+        <FSButton :config="{icon:'facebook'}" />
+        <FSButton :config="{icon:'google'}"/>
+      </div>
     </div>
     <div class="right"></div>
   </div>
@@ -18,6 +34,7 @@ import { useRouter } from "vue-router";
 import { useFirebaseAuth } from "vuefire";
 
 const FSTextBox = defineAsyncComponent(() => import("@/components/FSTextBox.vue"));
+const FSButton = defineAsyncComponent(() => import("@/components/FSButton.vue"));
 
 const auth = useFirebaseAuth();
 const email = ref<string>("");

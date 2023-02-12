@@ -1,0 +1,6 @@
+$list:center,normal,stretch,flex-start,flex-end,
+start,end,baseline,initial,inherit;
+
+@each $item in $list {
+    align-items: $item;
+}

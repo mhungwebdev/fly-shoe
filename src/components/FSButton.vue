@@ -14,7 +14,7 @@ import { ref, watch, onMounted } from "vue";
 const props = withDefaults(
   defineProps<{
     config: DxButton;
-    isLoading: boolean;
+    isLoading?: boolean;
   }>(),
   {
     config: DxButton,

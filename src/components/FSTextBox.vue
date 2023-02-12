@@ -6,15 +6,22 @@
 
 <script setup lang="ts">
 import DxTextBox from 'devextreme-vue/text-box';
-import { ref,watch } from 'vue';
+import { ref,watch,onMounted } from 'vue';
 
 const props = withDefaults(defineProps<{
-    config:DxTextBox
+    config:DxTextBox,
+    isFocused?:boolean,
 }>(),{
-    config:DxTextBox
+    config:DxTextBox,
+    isFocused:false
 });
 
 const dxTextBox = ref<DxTextBox>()
+
+onMounted(() => {
+    dxTextBox.value?.instance?.option(props.config);
+    if(props.isFocused) focusInput();
+}),
 
 watch(
     () => props.config,
@@ -27,6 +34,9 @@ watch(
     }
 )
 
+const focusInput = () => {
+    dxTextBox.value?.instance?.focus();
+}
 </script>
 
 <style scoped>
