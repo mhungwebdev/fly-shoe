@@ -15,8 +15,8 @@
         }" 
       />
 
-      <div>hoặc</div>
-      <div class="button-social-group">
+      <div class="dis-flex jus-center w-100pc">hoặc</div>
+      <div class="button-social-group dis-flex jus-space-between w-60pc">
         <FSButton :config="{icon:'facebook'}" />
         <FSButton :config="{icon:'google'}"/>
       </div>
