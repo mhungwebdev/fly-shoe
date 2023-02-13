@@ -1,20 +1,32 @@
 <template>
     <div class="fs-text-box-container">
-        <DxTextBox ref="dxTextBox" />
+        <DxTextBox v-model="internalValue" ref="dxTextBox" />
     </div>
 </template>
 
 <script setup lang="ts">
 import DxTextBox from 'devextreme-vue/text-box';
-import { ref,watch,onMounted } from 'vue';
+import { ref,watch,onMounted,computed } from 'vue';
 
 const props = withDefaults(defineProps<{
     config:DxTextBox,
     isFocused?:boolean,
+    value?:any;
 }>(),{
     config:DxTextBox,
     isFocused:false
 });
+
+const emit = defineEmits(['value:update'])
+
+const internalValue = computed(({
+    get() {
+      return props.value;
+    },
+    set(val) {
+      emit('value:update',val);
+    }
+  }))
 
 const dxTextBox = ref<DxTextBox>()
 

@@ -9,3 +9,10 @@ table-cell,table-column,table-row,none,initial,inherit;
         display: $display;
     }
 }
+
+$directions:row,row-reverse,column,column-reverse,initial,inherit;
+@each $direction in $directions {
+    .flex-#{$direction} {
+        flex-direction: $direction;
+    }
+}

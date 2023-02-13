@@ -1,21 +1,21 @@
 @for $i from 1 through 100 {
     .m-#{$i} {
-        margin: $i + 'px';
+        margin: #{$i} + "px";
     }
 
     .mt-#{$i}{
-        margin-top: $i + 'px';
+        margin-top: #{$i} + "px";
     }
 
     .mr-#{$i}{
-        margin-right: $i + 'px';
+        margin-right: #{$i} + "px";
     }
 
     .mb-#{$i}{
-        margin-bottom: $i + 'px';
+        margin-bottom: #{$i} + "px";
     }
 
     .ml-#{$i}{
-        margin-left: $i + 'px';
+        margin-left: #{$i} + "px";
     }
 }

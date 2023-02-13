@@ -1,0 +1,9 @@
+@for $i from 1 through 100 {
+    .height-#{$i}pc {
+        height: #{$i} + "%";
+    }
+}
+
+.height-auto {
+    height: auto;
+}
