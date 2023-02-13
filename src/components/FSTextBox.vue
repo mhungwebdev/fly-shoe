@@ -1,6 +1,6 @@
 <template>
     <div class="fs-text-box-container">
-        <DxTextBox v-model="internalValue" ref="dxTextBox" />
+        <DxTextBox v-model:value="internalValue" ref="dxTextBox" />
     </div>
 </template>
 
@@ -17,14 +17,14 @@ const props = withDefaults(defineProps<{
     isFocused:false
 });
 
-const emit = defineEmits(['value:update'])
+const emit = defineEmits(['update:modelValue'])
 
 const internalValue = computed(({
     get() {
       return props.value;
     },
     set(val) {
-      emit('value:update',val);
+      emit('update:modelValue',val);
     }
   }))
 
@@ -49,6 +49,10 @@ watch(
 const focusInput = () => {
     dxTextBox.value?.instance?.focus();
 }
+
+defineExpose({
+    focusInput
+})
 </script>
 
 <style scoped>

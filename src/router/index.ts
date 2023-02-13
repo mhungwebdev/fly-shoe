@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import { useCurrentUser } from 'vuefire';
+import { getCurrentUser, useCurrentUser } from 'vuefire';
 
 
 const router = createRouter({
@@ -14,11 +14,11 @@ const router = createRouter({
     },
     {
       path:'/register',
-      component:() => import('@/views/Register.vue'),
+      component:() => import('@/views/auth/Authentication.vue'),
     },
     {
       path:'/login',
-      component:() => import('@/views/Login.vue'),
+      component:() => import('@/views/auth/Authentication.vue'),
     },{
       path:'/demo-control',
       component:() => import('@/views/DemoControl.vue'),
@@ -26,11 +26,11 @@ const router = createRouter({
   ]
 })
 
-const getCurrentUser = ():any => {
-  const user = useCurrentUser().value;
+// const getCurrentUser = async ():Promise<any> => {
+//   const user = await useCurrentUser().value;
 
-  return user;
-}
+//   return user;
+// }
 
 router.beforeEach(async (to) => {
   // routes with `meta: { requiresAuth: true }` will check for the users, others won't
