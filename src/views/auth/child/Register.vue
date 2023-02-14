@@ -2,7 +2,7 @@
   <div class="register dis-flex flex-column align-center p-16 flex-1">
     <div class="title font-32 font-weight-700 mb-24">Đăng ký</div>
     <FSTextBox
-      model-value="email"
+      v-model="email"
       :is-focused="firstFocus"
       ref="fsTextBox"
       :config="{
@@ -16,7 +16,7 @@
     />
 
     <FSTextBox
-      model-value="password"
+      v-model="password"
       :config="{
         mode: 'password',
         label: 'Mật khẩu',
@@ -29,7 +29,7 @@
     />
 
     <FSTextBox
-      model-value="confirmPassword"
+      v-model="confirmPassword"
       :config="{
         mode: 'password',
         label: 'Nhập lại mật khẩu',
@@ -87,7 +87,7 @@
 </template>
 
 <script setup lang="ts">
-import { FSButton, FSTextBox } from "@/components";
+import { FSButton, FSTextBox } from "@/components/controls";
 import { createUserWithEmailAndPassword } from "@firebase/auth";
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";

@@ -4,10 +4,17 @@
       <Login ref="loginRef" />
       <Register ref="registerRef" :first-focus="isFirstFocusInput" />
 
-      <div
+      <FSGallery
         :class="positionPoster == Position.Left ? 'left' : 'right'"
         class="poster pos-absolute h-100pc w-50pc"
-      ></div>
+        :config="{
+          dataSource: galleryPoster,
+          loop:true,
+          showNavButtons:true,
+          showIndicator:true,
+          slideshowDelay:3000,
+        }"
+      />
     </div>
   </div>
 </template>
@@ -16,7 +23,14 @@
 import Register from "./child/Register.vue";
 import Login from "./child/Login.vue";
 import { useRouter } from "vue-router";
-import { onUpdated, ref, onMounted,computed } from "vue";
+import { onUpdated, ref, onMounted, computed } from "vue";
+import {FSGallery} from "@/components/controls";
+import Post1 from "@/common/images/image-description-01.jpg";
+import Post2 from "@/common/images/image-description-02.jpg";
+import Post3 from "@/common/images/image-description-03.jpg";
+import Post4 from "@/common/images/image-description-04.jpg";
+import Post5 from "@/common/images/image-description-5.png";
+import Post6 from "@/common/images/image-description-6.jpg";
 
 enum Position {
   Left = 1,
@@ -29,13 +43,13 @@ const pathLogin = "/login";
 const positionPoster = ref<Position>();
 const loginRef = ref<InstanceType<typeof Login>>();
 const registerRef = ref<InstanceType<typeof Register>>();
+const galleryPoster = ref([Post1,Post2,Post3,Post4,Post5,Post6]);
 
 const isFirstFocusInput = computed<boolean>(() => {
-  if ($router.currentRoute.value.path == pathLogin)
-    return false
-  
+  if ($router.currentRoute.value.path == pathLogin) return false;
+
   return true;
-})
+});
 
 const getPositionPoster = () => {
   if ($router.currentRoute.value.path == pathLogin)
@@ -73,16 +87,8 @@ onUpdated(() => {
     background-color: white;
     height: 400px;
     filter: drop-shadow(4px 3px 20px var(--app-color-primary));
-
     .poster {
-      background-image: url("@/common/images/image-description-02.jpg");
-      background-repeat: no-repeat;
-      background-position: center;
-      background-size: cover;
-      min-width: 300px;
-      transition: all 0.5s ease-in-out;
-      left: 0;
-      top: 0;
+      transition: all .5s ease-in-out;
     }
 
     .poster.left {
