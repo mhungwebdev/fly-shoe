@@ -2,7 +2,7 @@
   <div class="register dis-flex flex-column align-center p-16 flex-1">
     <div class="title font-32 font-weight-700 mb-24">Đăng ký</div>
     <FSTextBox
-      v-model="email"
+      model-value="email"
       :is-focused="firstFocus"
       ref="fsTextBox"
       :config="{
@@ -16,7 +16,7 @@
     />
 
     <FSTextBox
-      v-model="password"
+      model-value="password"
       :config="{
         mode: 'password',
         label: 'Mật khẩu',
@@ -29,7 +29,7 @@
     />
 
     <FSTextBox
-      v-model="confirmPassword"
+      model-value="confirmPassword"
       :config="{
         mode: 'password',
         label: 'Nhập lại mật khẩu',
