@@ -36,8 +36,16 @@
     <div class="mt-40 dis-flex flex-column align-center">
       <FSTextBox v-model="keyword" :config="{}" />
       <div class="mt-16">
-        <div class="mt-8" v-for="user in users">
-          {{ user.FullName }}
+        <div class="mt-8 dis-flex" v-for="user in users">
+          <div>{{ user.FullName }}</div>
+          <div 
+            @click="deleteUser(user)"
+            class="ml-16" 
+            :style="{
+              cursor:'pointer',
+              color:'red'
+            }"
+          >Xóa</div>
         </div>
       </div>
     </div>
@@ -45,15 +53,23 @@
 </template>
 
 <script setup lang="ts">
+import { removeVietnameseTones } from "@/common/fn";
 import { FSDateBox, FSTextBox } from "@/components/controls";
 import { dbFireStore } from "@/firebase";
-import { endAt, query, startAt } from "@firebase/database";
-import { addDoc, collection, getDocs, orderBy, Query, where } from "@firebase/firestore";
+import { query } from "@firebase/database";
+import {
+addDoc,
+collection,
+deleteDoc,
+doc,
+getDocs, where
+} from "@firebase/firestore";
 import { onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useFirebaseAuth } from "vuefire";
 
 interface IUser {
+  ID:string;
   FullName: string;
   Address: string;
   Birthday: Date;
@@ -63,6 +79,7 @@ const auth = useFirebaseAuth();
 const $router = useRouter();
 
 const user = ref<IUser>({
+  ID:"",
   FullName: "",
   Address: "",
   Birthday: new Date(),
@@ -71,30 +88,34 @@ const user = ref<IUser>({
 const keyword = ref<string>("");
 const timeDelaySearch = ref<any>(null);
 
+const deleteUser = async (user:IUser) => {
+  await deleteDoc(doc(dbFireStore, "Users", user.ID));
+  getUser();
+}
+
 watch(
   () => keyword.value,
   (newValue) => {
     if (timeDelaySearch.value) clearTimeout(timeDelaySearch.value);
 
-    timeDelaySearch.value = setTimeout(async() => {
-      const userDocRef:Query = collection(dbFireStore, "Users");
-      if(userDocRef){
-        const querySearch = query(
-          userDocRef,
-          orderBy("FullName","desc"),
-          startAt(`${newValue}`),
-          endAt(`${newValue}` + '\uf8ff')
-        );
-        const querySnapshot = await getDocs(querySearch);
-        users.value = [];
-  
-        querySnapshot.forEach((doc) => {
-          let user = doc.data() as any;
-          user.Birthday = new Date(user.Birthday.seconds * 1000);
-  
-          if (user) users.value = [...users.value, user as IUser];
-        });
-      }
+    timeDelaySearch.value = setTimeout(async () => {
+      const userCollection: any = collection(dbFireStore, "Users");
+      const whereClause: any = where(
+        "KeySearch",
+        newValue.trim().length > 0 ? "array-contains-any" : "not-in",
+        removeVietnameseTones(newValue.trim()).toLocaleLowerCase().split(" ")
+      );
+      const q: any = query(userCollection, whereClause);
+
+      const querySnapshot = await getDocs(q);
+      users.value = [];
+      querySnapshot.forEach((doc) => {
+        let user: any = doc.data();
+        user.Birthday = new Date(user.Birthday.seconds * 1000);
+        user["ID"] = doc.id;
+
+        if (user) users.value = [...users.value, user as IUser];
+      });
     }, 500);
   }
 );
@@ -109,16 +130,16 @@ const users = ref<Array<IUser>>([]);
 
 onMounted(async () => {
   await getUser();
-  // console.log(users.value);
-  // console.log(dbFireStore);
 });
 
 const getUser = async (): Promise<void> => {
   try {
+    users.value = [];
     const querySnapshot = await getDocs(collection(dbFireStore, "Users"));
     querySnapshot.forEach((doc) => {
       let user = doc.data();
       user.Birthday = new Date(user.Birthday.seconds * 1000);
+      user["ID"] = doc.id;
 
       if (user) users.value = [...users.value, user as IUser];
     });
@@ -127,14 +148,25 @@ const getUser = async (): Promise<void> => {
   }
 };
 
+const resetForm = () => {
+  user.value = {
+    ID:"",
+    FullName: "",
+    Address: "",
+    Birthday: new Date(),
+  };
+};
+
 const createUser = async () => {
   try {
     const docRef = await addDoc(collection(dbFireStore, "Users"), {
+      KeySearch: removeVietnameseTones(user.value.FullName.trim()).toLocaleLowerCase().split(" "),
       FullName: user.value.FullName,
       Address: user.value.Address,
       Birthday: user.value.Birthday,
     });
-    console.log("Document written with ID: ", docRef.id);
+    getUser();
+    resetForm();
   } catch (e) {
     console.error("Error adding document: ", e);
   }
