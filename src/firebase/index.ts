@@ -1,12 +1,9 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
+import { initializeApp, type FirebaseApp } from "firebase/app";
 import { FacebookAuthProvider, GoogleAuthProvider } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { Firestore, getFirestore } from "firebase/firestore";
+import { getMessaging,getToken,onMessage } from "firebase/messaging";
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyAMaCS-GTB4UPydhYiffKLERrc_iopyR_U",
   authDomain: "fly-shoe.firebaseapp.com",
@@ -29,7 +26,9 @@ fbProvider.setCustomParameters({
 
 
 // Initialize Firebase
-const firebaseApp = initializeApp(firebaseConfig);
-const dbFireStore = getFirestore(firebaseApp);
+const firebaseApp:FirebaseApp = initializeApp(firebaseConfig);
+const dbFireStore:Firestore = getFirestore(firebaseApp);
+const messaging = getMessaging(firebaseApp);
+const token = await getToken(messaging,{vapidKey:`BC7TT0p04BRfbLdZmzzVJilexS2Y_GsPcIbeEd1vH5FvW1Wci4TTT34zd77qdUlbEwrZwBi1PNKwvYN_MEnT_Rk`});
 
-export {firebaseApp,fbProvider,ggProvider,dbFireStore};
+export {firebaseApp,fbProvider,ggProvider,dbFireStore,token,messaging};
